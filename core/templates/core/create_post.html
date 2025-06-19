@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Post</title>
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="{% url 'home' %}" class="logo">📸 MySocial</a>
+    <div class="nav-right">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'explore' %}">Explore</a>
+      <a href="{% url 'profile' user.username %}">Profile</a>
+      <a href="{% url 'inbox' %}">Inbox</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <h2>Create a New Post</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <label for="id_content">Content:</label>
+      <textarea name="content" rows="5" required placeholder="Write something cool..."></textarea>
+
+      <label for="id_image">Image (optional):</label>
+      <input type="file" name="image">
+
+      <button type="submit">Post</button>
+    </form>
+  </div>
+
+</body>
+</html>

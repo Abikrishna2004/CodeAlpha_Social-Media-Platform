@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ profile_user.username }}'s Profile</title>
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="{% url 'home' %}" class="logo">📸 MySocial</a>
+    <div class="nav-right">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'explore' %}">Explore</a>
+      <a href="{% url 'profile' request.user.username %}">Profile</a>
+      <a href="{% url 'inbox' %}">Inbox</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </div>
+  </div>
+
+  <!-- Main Profile Container -->
+  <div class="container profile-container">
+    <h2>{{ profile_user.username }}'s Profile</h2>
+
+    <!-- Follow / Unfollow button -->
+    {% if user != profile_user %}
+      <form action="{% url 'toggle_follow' profile_user.username %}" method="POST">
+        {% csrf_token %}
+        <button type="submit">
+          {% if is_following %}
+            Unfollow
+          {% else %}
+            Follow
+          {% endif %}
+        </button>
+      </form>
+    {% endif %}
+
+    <!-- Stats -->
+    <p><strong>{{ post_count }}</strong> Posts</p>
+    <p><strong>{{ followers.count }}</strong> Followers | <strong>{{ following.count }}</strong> Following</p>
+
+    <hr>
+
+    <!-- User's Posts -->
+    {% if posts %}
+      {% for post in posts %}
+        <div class="post-card">
+          <p><strong>{{ post.author.username }}</strong>: {{ post.content }}</p>
+          {% if post.image %}
+            <img src="{{ post.image.url }}" alt="Post image">
+          {% endif %}
+          <p><small>{{ post.timestamp|date:"F j, Y, g:i a" }}</small></p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>This user hasn’t posted anything yet.</p>
+    {% endif %}
+  </div>
+
+</body>
+</html>

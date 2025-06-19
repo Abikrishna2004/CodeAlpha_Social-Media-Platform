@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home - MySocial</title>
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <a href="{% url 'home' %}" class="logo">📸 MySocial</a>
+    <div class="nav-right">
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'explore' %}">Explore</a>
+      <a href="{% url 'profile' user.username %}">Profile</a>
+      <a href="{% url 'inbox' %}">Inbox</a>
+      <a href="{% url 'logout' %}">Logout</a>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="container">
+
+    <h2>Welcome to MySocial</h2>
+    <p><a href="{% url 'create_post' %}">➕ Create a New Post</a></p>
+
+    <!-- Stories -->
+    <div class="stories-container">
+      {% for story in stories %}
+        <div class="story">
+          <img src="{{ story.image.url }}" alt="{{ story.user.username }}">
+          <p>{{ story.user.username }}</p>
+        </div>
+      {% empty %}
+        <p style="color:#ddd;">No stories yet.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Posts -->
+    {% for post in posts %}
+      <div class="post-card">
+        <h3><a href="{% url 'profile' post.author.username %}">{{ post.author.username }}</a></h3>
+        <p>{{ post.content }}</p>
+        {% if post.image %}
+          <img src="{{ post.image.url }}" alt="Post Image">
+        {% endif %}
+        <p><small>{{ post.timestamp|date:"F j, Y, g:i a" }}</small></p>
+
+        <!-- Like button -->
+        <form action="{% url 'like_post' post.id %}" method="POST">
+          {% csrf_token %}
+          <button type="submit">❤️ {{ post.likes.count }} Like{{ post.likes.count|pluralize }}</button>
+        </form>
+
+        <!-- Comments -->
+        <div class="comments">
+          {% if post.comments.all %}
+            {% for comment in post.comments.all %}
+              <p class="comment"><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</p>
+            {% endfor %}
+          {% else %}
+            <p class="comment">No comments yet.</p>
+          {% endif %}
+        </div>
+
+        <!-- Add comment -->
+        <form action="{% url 'comment_post' post.id %}" method="POST">
+          {% csrf_token %}
+          <input type="text" name="comment" placeholder="Write a comment..." required>
+          <button type="submit">Comment</button>
+        </form>
+      </div>
+    {% empty %}
+      <p>No posts found. Start by <a href="{% url 'create_post' %}">creating one</a>.</p>
+    {% endfor %}
+
+  </div>
+</body>
+</html>

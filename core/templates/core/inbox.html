@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inbox</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+
+<div class="navbar">
+    <div class="nav-left">
+        <a href="{% url 'home' %}" class="logo">📸 MySocial</a>
+    </div>
+    <div class="nav-right">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'explore' %}">Explore</a>
+        <a href="{% url 'profile' user.username %}">Profile</a>
+        <a href="{% url 'inbox' %}">Inbox</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Inbox</h2>
+    <p>Select a user to start chatting:</p>
+    <ul>
+        {% for u in users %}
+            <li>
+                <a href="{% url 'chat' u.username %}">{{ u.username }}</a>
+            </li>
+        {% empty %}
+            <li>No users found.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+</html>
