@@ -33,11 +33,6 @@ A full-stack social media platform built using **Django**, featuring user authen
 
 ---
 
-## 📷 Screenshots
-
-> *(Add your UI screenshots or story previews here)*
-
----
 
 ## ⚙️ Getting Started
 
